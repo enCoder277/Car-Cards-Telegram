@@ -2,7 +2,6 @@ import asyncio
 import logging
 from decouple import config
 from aiogram import Bot, Dispatcher, types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters.command import Command
 
 # логи
@@ -19,13 +18,18 @@ async def cmd_start(message: types.Message):
         "Добро пожаловать в бота для коллекционирования карточек машин!\n"
         "Чтобы ознакомиться с возможностями бота, нажми на команду /manual"
     )
-    kb = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="Голосовые сообщения 🎙️", callback_data="set_audio_mode")],
-            [InlineKeyboardButton(text="Текстовые сообщения 📝", callback_data="set_text_mode")]
-        ]
+    kb = [
+        [
+            types.KeyboardButton(text="Пример 1"),
+            types.KeyboardButton(text="Пример 2")
+        ],
+    ]
+    keyboard = types.ReplyKeyboardMarkup(
+        keyboard=kb,
+        resize_keyboard=True,
+        input_field_placeholder="Выбери действие"
     )
-    await message.answer(description, reply_markup=kb)
+    await message.answer(description, reply_markup=keyboard)
 
 
 @dp.message(Command("manual"))
@@ -69,10 +73,18 @@ async def cmd_support_project(message: types.Message):
     await message.answer(description)
 
 
-@dp.callback_query()
-async def process_callback(callback_query: types.CallbackQuery):
-    # Уведомление Telegram о том, что запрос обработан
-    await bot.answer_callback_query(callback_query.id)
+BUTTON_TEXTS = {"Пример 1", "Пример 2"}
+
+@dp.message_handler(lambda message: message.text in BUTTON_TEXTS)
+async def handle_buttons(message: types.Message):
+    if message.text == "Пример 1":
+        await message.answer("Вы нажали кнопку 'Пример 1'")
+    elif message.text == "Пример 2":
+        await message.answer("Вы нажали кнопку 'Пример 2'")
+    elif message.text == "Другая кнопка":
+        await message.answer("Вы нажали кнопку 'Другая кнопка'")
+    elif message.text == "Еще кнопка":
+        await message.answer("Вы нажали кнопку 'Еще кнопка'")
 
 
 async def main():
