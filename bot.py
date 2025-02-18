@@ -3,7 +3,7 @@ import logging
 from decouple import config
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
-
+#мок апы
 # логи
 logging.basicConfig(level=logging.INFO)
 BOT_TOKEN = config('TELEGRAM_BOT_TOKEN')
@@ -21,7 +21,8 @@ async def cmd_start(message: types.Message):
     kb = [
         [
             types.KeyboardButton(text="Пример 1"),
-            types.KeyboardButton(text="Пример 2")
+            types.KeyboardButton(text="Пример 2"),
+            types.KeyboardButton(text="Example")
         ],
     ]
     keyboard = types.ReplyKeyboardMarkup(
@@ -73,18 +74,17 @@ async def cmd_support_project(message: types.Message):
     await message.answer(description)
 
 
-BUTTON_TEXTS = {"Пример 1", "Пример 2"}
+BUTTON_TEXTS = {"Пример 1", "Пример 2", "Example"}
 
-@dp.message_handler(lambda message: message.text in BUTTON_TEXTS)
+
+@dp.message(lambda message: message.text in BUTTON_TEXTS)
 async def handle_buttons(message: types.Message):
     if message.text == "Пример 1":
         await message.answer("Вы нажали кнопку 'Пример 1'")
     elif message.text == "Пример 2":
         await message.answer("Вы нажали кнопку 'Пример 2'")
-    elif message.text == "Другая кнопка":
-        await message.answer("Вы нажали кнопку 'Другая кнопка'")
-    elif message.text == "Еще кнопка":
-        await message.answer("Вы нажали кнопку 'Еще кнопка'")
+    elif message.text == "Example":
+        await message.answer("Вы нажали кнопку 'Example'")
 
 
 async def main():
